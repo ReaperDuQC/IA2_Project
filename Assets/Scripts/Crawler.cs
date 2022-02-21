@@ -6,6 +6,12 @@ public class Crawler : Maze
 {
     [SerializeField] private int m_nbsVerticalCrawler;
     [SerializeField] private int m_nbsHorizontalCrawler;
+
+    public Crawler(int verticalCrawlers, int horizontalCrawlers, Transform ground, Transform maze, int width, int depth, int scale) : base(ground, maze, width, depth, scale)
+    {
+        verticalCrawlers = m_nbsVerticalCrawler;
+        horizontalCrawlers = m_nbsHorizontalCrawler;
+    }
     public override void Generate()
     {
         for(int i = 0; i < m_nbsVerticalCrawler; i++)

@@ -6,6 +6,12 @@ public class Prims : Maze
 {
     [SerializeField] private int m_startingXPos;
     [SerializeField] private int m_startingZPos;
+
+    public Prims(int startingX, int startingZ, Transform ground, Transform maze, int width, int depth, int scale) : base(ground, maze, width, depth, scale)
+    {
+        m_startingXPos = startingX;
+        m_startingZPos = startingZ;
+    }
     public override void Generate()
     {
         int x = m_startingXPos;

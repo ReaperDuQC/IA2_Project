@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
 public class MapLocation
@@ -11,21 +13,29 @@ public class MapLocation
         m_z = z;
     }
 }
-public class Maze : MonoBehaviour
+public class Maze
 {
     [SerializeField] private Transform m_ground;
+    [SerializeField] private Transform m_maze;
     [SerializeField] private int m_width;
     [SerializeField] private int m_depth;
 
     [SerializeField] byte[,] m_map;
     [SerializeField] private int m_scale = 1;
-
-    void Start()
+    private List<GameObject> m_walls = new List<GameObject>();
+    public Maze(Transform ground, Transform maze, int width, int depth, int scale)
+    {
+        m_ground = ground;
+        m_maze = maze;
+        m_width = width;
+        m_depth = depth;
+        m_scale = scale;
+    }
+    public void StartGenerating()
     {
         InitialiseMap();
         Generate();
         DrawMap();
-        //m_ground.position -= new Vector3(0, m_scale / 2 ,0);
     }
 
     public virtual void Generate()
@@ -63,10 +73,11 @@ public class Maze : MonoBehaviour
                 {
                     Vector3 pos = new Vector3(x * m_scale, m_scale / 2, z * m_scale);
                     GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    wall.transform.parent = transform;
-                    Vector3 newScale = transform.localScale * m_scale;
+                    wall.transform.parent = m_maze.transform;
+                    Vector3 newScale = m_maze.transform.localScale * m_scale;
                     wall.transform.localScale = newScale;
                     wall.transform.position = pos;
+                    m_walls.Add(wall);
                 }
             }
         }
@@ -143,5 +154,12 @@ public class Maze : MonoBehaviour
     {
         return CountSquareNeighbours(x, z) + CountDiagonalNeighbours(x, z);
     }
-
+    public void ClearMaze()
+    {
+        for(int i = m_walls.Count - 1; i >= 0; i--)
+        {
+            Object.DestroyImmediate(m_walls[i]);
+        }
+        m_walls.Clear();
+    }
 }

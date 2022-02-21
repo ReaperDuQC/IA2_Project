@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Wilsons : Maze
 {
+
     List<MapLocation> m_directions = new List<MapLocation>()
     {
         new MapLocation (1, 0),
@@ -16,6 +17,11 @@ public class Wilsons : Maze
     [SerializeField] private int m_startX;
     [SerializeField] private int m_startZ;
 
+    public Wilsons(int startingX, int startingZ, Transform ground, Transform maze, int width, int depth, int scale) : base(ground, maze, width, depth, scale)
+    {
+        m_startX = startingX;
+        m_startZ = startingZ;
+    }
     public override void Generate()
     {
         int x = Random.Range(2, GetWidth() - 1);
