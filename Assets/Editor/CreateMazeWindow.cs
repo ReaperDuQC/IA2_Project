@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.AI;
+
 public class CreateMazeWindow : EditorWindow
 {
     private int _width;
@@ -49,7 +51,14 @@ public class CreateMazeWindow : EditorWindow
             ClearMaze();
             _maze = new Prims(_startingPosX, _startingPosZ, _exitPosX, _exitPosZ, _ground, _mazeContainer, _width, _depth, _scale);
             _maze.StartGenerating();
-
+            foreach(Transform child in _mazeContainer)
+            {
+                child.gameObject.isStatic = true;
+            }
+        }
+        if (GUILayout.Button("Bake NavMesh"))
+        {
+            _ground.GetComponent<NavMeshSurface>().BuildNavMesh();
         }
         if (GUILayout.Button("Clear Maze"))
         {
