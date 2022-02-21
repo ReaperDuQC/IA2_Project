@@ -154,12 +154,4 @@ public class Maze
     {
         return CountSquareNeighbours(x, z) + CountDiagonalNeighbours(x, z);
     }
-    public void ClearMaze()
-    {
-        for(int i = m_walls.Count - 1; i >= 0; i--)
-        {
-            Object.DestroyImmediate(m_walls[i]);
-        }
-        m_walls.Clear();
-    }
 }

@@ -9,9 +9,12 @@ public class CreateMazeWindow : EditorWindow
     private int _scale;
     private int _startingPosX;
     private int _startingPosZ;
+    private int _exitPosX;
+    private int _exitPosZ;
     private Transform _ground;
     private Transform _mazeContainer;
     private Prims _maze;
+    private List<GameObject> _walls;
 
     [MenuItem("Window/Maze Generation")]
     public static void ShowWindow()
@@ -24,28 +27,41 @@ public class CreateMazeWindow : EditorWindow
         GUILayout.Label("Maze Modifiers");
         GUILayout.BeginVertical();
         GUILayout.Label("Width");
-        _width = EditorGUILayout.IntSlider(_width, 1, 100);
+        _width = EditorGUILayout.IntSlider(_width, 0, 100);
         GUILayout.Label("Depth");
-        _depth = EditorGUILayout.IntSlider(_depth, 1, 100);
+        _depth = EditorGUILayout.IntSlider(_depth, 0, 100);
         GUILayout.Label("Scale");
         _scale = EditorGUILayout.IntSlider(_scale, 1, 50);
         GUILayout.Label("Starting Position X");
-        _startingPosX = EditorGUILayout.IntSlider(_startingPosX, 0, _width);
+        _startingPosX = EditorGUILayout.IntSlider(_startingPosX, 0, _width - 1);
         GUILayout.Label("Starting Position Z");
-        _startingPosZ = EditorGUILayout.IntSlider(_startingPosZ, 0, _depth);
+        _startingPosZ = EditorGUILayout.IntSlider(_startingPosZ, _startingPosX == 0 ? 1 : 0, _startingPosX == _width - 1 ? _depth - 2 : _depth - 1);
+        GUILayout.Label("Exit Position X");
+        _exitPosX = EditorGUILayout.IntSlider(_exitPosX, 0, _width - 1);
+        GUILayout.Label("Exit Position Z");
+        _exitPosZ = EditorGUILayout.IntSlider(_exitPosZ, _exitPosX == 0 ? 1 : 0, _exitPosX == _width - 1 ? _depth - 2 : _depth - 1);
         _ground = (Transform)EditorGUILayout.ObjectField("Ground", _ground, typeof(Transform), true);
         _mazeContainer = (Transform)EditorGUILayout.ObjectField("Maze", _mazeContainer, typeof(Transform), true);
         GUILayout.EndVertical();
 
         if (GUILayout.Button("Generate New Maze"))
         {
-            if(_maze != null)
-            {
-                _maze.ClearMaze();
-            }
-            _maze = new Prims(_startingPosX, _startingPosZ, _ground, _mazeContainer, _width, _depth, _scale);
+            ClearMaze();
+            _maze = new Prims(_startingPosX, _startingPosZ, _exitPosX, _exitPosZ, _ground, _mazeContainer, _width, _depth, _scale);
             _maze.StartGenerating();
 
+        }
+        if (GUILayout.Button("Clear Maze"))
+        {
+            ClearMaze();
+        }
+    }
+
+    private void ClearMaze()
+    {
+        for(int i = _mazeContainer.childCount - 1; i >= 0; i--)
+        {
+            DestroyImmediate(_mazeContainer.GetChild(i).gameObject);
         }
     }
 }
