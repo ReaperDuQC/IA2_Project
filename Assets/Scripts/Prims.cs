@@ -40,6 +40,7 @@ public class Prims : Maze
 
             countLoops++;
         }
+        SetMap(m_exitPosX, m_exitPosZ, 0);
     }
     private List<MapLocation> AddWalls(int x, int z, List<MapLocation> walls)
     {

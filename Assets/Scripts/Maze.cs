@@ -76,7 +76,7 @@ public class Maze
                     wall.transform.parent = m_maze.transform;
                     Vector3 newScale = m_maze.transform.localScale * m_scale;
                     wall.transform.localScale = newScale;
-                    wall.transform.position = pos;
+                    wall.transform.localPosition = pos;
                     m_walls.Add(wall);
                 }
             }

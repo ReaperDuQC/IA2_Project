@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class CreateMazeWindow : EditorWindow
 {
@@ -51,18 +52,17 @@ public class CreateMazeWindow : EditorWindow
             ClearMaze();
             _maze = new Prims(_startingPosX, _startingPosZ, _exitPosX, _exitPosZ, _ground, _mazeContainer, _width, _depth, _scale);
             _maze.StartGenerating();
-            foreach(Transform child in _mazeContainer)
-            {
-                child.gameObject.isStatic = true;
-            }
+            MakeNavMeshReady();
+            BakeNavMesh();
         }
         if (GUILayout.Button("Bake NavMesh"))
         {
-            _ground.GetComponent<NavMeshSurface>().BuildNavMesh();
+            BakeNavMesh();
         }
         if (GUILayout.Button("Clear Maze"))
         {
             ClearMaze();
+            NavMesh.RemoveAllNavMeshData();
         }
     }
 
@@ -71,6 +71,21 @@ public class CreateMazeWindow : EditorWindow
         for(int i = _mazeContainer.childCount - 1; i >= 0; i--)
         {
             DestroyImmediate(_mazeContainer.GetChild(i).gameObject);
+        }
+    }
+    private void BakeNavMesh()
+    {
+        _ground.GetComponent<NavMeshSurface>().BuildNavMesh();
+    }
+    private void MakeNavMeshReady()
+    {
+        foreach (Transform child in _mazeContainer)
+        {
+            child.gameObject.isStatic = true;
+
+            NavMeshModifier modifier = child.gameObject.AddComponent<NavMeshModifier>();
+            modifier.overrideArea = true;
+            modifier.area = 1;
         }
     }
 }
