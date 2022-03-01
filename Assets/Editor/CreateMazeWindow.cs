@@ -14,7 +14,6 @@ public class CreateMazeWindow : EditorWindow
     private int _startingPosZ;
     private int _exitPosX;
     private int _exitPosZ;
-    private Transform _ground;
     private Transform _mazeContainer;
     private Prims _maze;
     private List<GameObject> _walls;
@@ -43,14 +42,13 @@ public class CreateMazeWindow : EditorWindow
         _exitPosX = EditorGUILayout.IntSlider(_exitPosX, 0, _width - 1);
         GUILayout.Label("Exit Position Z");
         _exitPosZ = EditorGUILayout.IntSlider(_exitPosZ, _exitPosX == 0 ? 1 : 0, _exitPosX == _width - 1 ? _depth - 2 : _depth - 1);
-        _ground = (Transform)EditorGUILayout.ObjectField("Ground", _ground, typeof(Transform), true);
         _mazeContainer = (Transform)EditorGUILayout.ObjectField("Maze", _mazeContainer, typeof(Transform), true);
         GUILayout.EndVertical();
 
         if (GUILayout.Button("Generate New Maze"))
         {
             ClearMaze();
-            _maze = new Prims(_startingPosX, _startingPosZ, _exitPosX, _exitPosZ, _ground, _mazeContainer, _width, _depth, _scale);
+            _maze = new Prims(_startingPosX, _startingPosZ, _exitPosX, _exitPosZ, _mazeContainer, _width, _depth, _scale);
             _maze.StartGenerating();
             MakeNavMeshReady();
             BakeNavMesh();
@@ -75,7 +73,7 @@ public class CreateMazeWindow : EditorWindow
     }
     private void BakeNavMesh()
     {
-        _ground.GetComponent<NavMeshSurface>().BuildNavMesh();
+        //_ground.GetComponent<NavMeshSurface>().BuildNavMesh();
     }
     private void MakeNavMeshReady()
     {

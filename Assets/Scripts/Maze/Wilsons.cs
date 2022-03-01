@@ -17,7 +17,7 @@ public class Wilsons : Maze
     [SerializeField] private int m_startX;
     [SerializeField] private int m_startZ;
 
-    public Wilsons(int startingX, int startingZ, Transform ground, Transform maze, int width, int depth, int scale) : base(ground, maze, width, depth, scale)
+    public Wilsons(int startingX, int startingZ,  Transform maze, int width, int depth, int scale) : base( maze, width, depth, scale)
     {
         m_startX = startingX;
         m_startZ = startingZ;
