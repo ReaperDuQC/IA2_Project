@@ -5,5 +5,11 @@ using UnityEngine.AI;
 
 public class Enemy : Agent
 {
-    
+    [SerializeField]
+    Transform _destination;
+
+    private void Start()
+    {
+        _agent.SetDestination(_destination.position);
+    }
 }
