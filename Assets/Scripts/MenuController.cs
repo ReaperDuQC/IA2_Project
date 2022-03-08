@@ -20,4 +20,8 @@ public class MenuController : MonoBehaviour
          Application.Quit();
 #endif
     }
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
 }
