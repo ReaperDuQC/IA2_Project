@@ -15,7 +15,6 @@ public class MapLocation
 }
 public class Maze
 {
-    [SerializeField] private Transform m_ground;
     [SerializeField] private Transform m_maze;
     [SerializeField] private int m_width;
     [SerializeField] private int m_depth;
@@ -23,9 +22,8 @@ public class Maze
     [SerializeField] byte[,] m_map;
     [SerializeField] private int m_scale = 1;
     private List<GameObject> m_walls = new List<GameObject>();
-    public Maze(Transform ground, Transform maze, int width, int depth, int scale)
+    public Maze( Transform maze, int width, int depth, int scale)
     {
-        m_ground = ground;
         m_maze = maze;
         m_width = width;
         m_depth = depth;
@@ -65,6 +63,11 @@ public class Maze
     }
     private void DrawMap()
     {
+        GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        ground.transform.parent = m_maze.transform;
+        ground.name = "Ground";
+        ground.transform.localScale = new Vector3(m_width * m_scale, 1f, m_depth * m_scale);
+        ground.transform.localPosition += new Vector3(((m_width * m_scale) * 0.5f ) - m_scale * 0.5f, 0f, ((m_depth * m_scale) * 0.5f) - m_scale * 0.5f);
         for (int z = 0; z < m_depth; z++)
         {
             for (int x = 0; x < m_width; x++)
@@ -73,6 +76,7 @@ public class Maze
                 {
                     Vector3 pos = new Vector3(x * m_scale, m_scale / 2, z * m_scale);
                     GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    wall.name = "Wall";
                     wall.transform.parent = m_maze.transform;
                     Vector3 newScale = m_maze.transform.localScale * m_scale;
                     wall.transform.localScale = newScale;

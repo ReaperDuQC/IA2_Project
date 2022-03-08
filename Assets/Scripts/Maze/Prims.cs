@@ -8,7 +8,7 @@ public class Prims : Maze
     [SerializeField] private int m_startingPosZ;
     [SerializeField] private int m_exitPosX;
     [SerializeField] private int m_exitPosZ;
-    public Prims(int startingX, int startingZ, int exitX, int exitZ, Transform ground, Transform maze, int width, int depth, int scale) : base(ground, maze, width, depth, scale)
+    public Prims(int startingX, int startingZ, int exitX, int exitZ, Transform maze, int width, int depth, int scale) : base( maze, width, depth, scale)
     {
         m_startingPosX = startingX;
         m_startingPosZ = startingZ;

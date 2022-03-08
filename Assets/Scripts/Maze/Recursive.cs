@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Recursive : Maze
 {
-    public Recursive( Transform ground, Transform maze, int width, int depth, int scale) : base(ground, maze, width, depth, scale)
+    public Recursive(Transform maze, int width, int depth, int scale) : base( maze, width, depth, scale)
     {
 
     }
