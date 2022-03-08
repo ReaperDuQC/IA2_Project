@@ -26,6 +26,9 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public bool canMove = true;
 
+    private Vector3 initialPosition;
+    [SerializeField] float minimumYPosition = -10f;
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -33,6 +36,7 @@ public class PlayerController : MonoBehaviour
         // Lock cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        initialPosition = transform.position;
     }
 
     void Update()
@@ -74,6 +78,14 @@ public class PlayerController : MonoBehaviour
             rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
             playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
             transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
+        }
+        CheckForFall();
+    }
+    void CheckForFall()
+    {
+        if(transform.position.y < minimumYPosition)
+        {
+            transform.position = initialPosition;
         }
     }
 }
