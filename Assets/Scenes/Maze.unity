@@ -568,6 +568,7 @@ MonoBehaviour:
   _exitPosZ: 55
   _mazeContainer: {fileID: 713273951}
   _finishLinePrefab: {fileID: 4037248426686638449, guid: 4627ac2e24dd15040bee19816d78868a, type: 3}
+  _startingLinePrefab: {fileID: 4037248426686638449, guid: 311d78d01cb0120448c5e47234207662, type: 3}
   _player: {fileID: 611262606}
 --- !u!1 &742943676
 GameObject:

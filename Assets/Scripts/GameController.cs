@@ -18,6 +18,7 @@ public class GameController : MonoBehaviour
     private List<GameObject> _walls;
     private NavMeshSurface _ground;
     [SerializeField] GameObject _finishLinePrefab;
+    [SerializeField] GameObject _startingLinePrefab;
     [SerializeField] Transform _player;
     private void Awake()
     {
@@ -28,6 +29,7 @@ public class GameController : MonoBehaviour
         _maze.StartGenerating();
         MakeNavMeshReady();
         BakeNavMesh();
+        PlaceStartingLine();
         PlaceFinishLine();
         SetPlayerInitialPosition();
     }
@@ -64,6 +66,14 @@ public class GameController : MonoBehaviour
     {
         Vector3 pos = transform.position;
         return new Vector3(_exitPosX * _scale, 0f, _scale * _exitPosZ);
+    }
+    private void PlaceStartingLine()
+    {
+        if (_startingLinePrefab != null)
+        {
+            Transform finishLine = Instantiate(_startingLinePrefab, GetStartingPos() + new Vector3(0f, _scale * 0.5f, 0f), Quaternion.identity).transform;
+            finishLine.localRotation = Quaternion.Euler(0f, -90f, 0f);
+        }
     }
     private void PlaceFinishLine()
     {
