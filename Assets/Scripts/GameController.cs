@@ -9,9 +9,9 @@ public class GameController : MonoBehaviour
     [SerializeField] [Range(5, 100)] private int _depth;
     [SerializeField] private int _scale;
 
-    [SerializeField] private int _startingPosX;
+    private int _startingPosX;
     [SerializeField] private int _startingPosZ;
-    [SerializeField] private int _exitPosX;
+    private int _exitPosX;
     [SerializeField] private int _exitPosZ;
     [SerializeField] private Transform _mazeContainer;
     private Prims _maze;
@@ -23,7 +23,9 @@ public class GameController : MonoBehaviour
     private void Awake()
     {
         PlayerPrefs.GetInt("Difficulty");
-        _exitPosX = _exitPosX > _width - 1 ? _width - 1 : _exitPosX;
+        _startingPosX = 0;
+        _startingPosZ = _startingPosZ > _depth - 1 ? (_depth - 1) / 2 : _startingPosZ;
+        _exitPosX =  _width - 1 ;
         _exitPosZ = _exitPosZ > _depth - 1 ?( _depth - 1 ) / 2 : _exitPosZ;
         _maze = new Prims(_startingPosX, _startingPosZ, _exitPosX, _exitPosZ, _mazeContainer, _width, _depth, _scale);
         _maze.StartGenerating();
