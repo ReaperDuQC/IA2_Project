@@ -2,18 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-public class ChaseNode : Node
+
+public class IsIdleNode : Node
 {
     NavMeshAgent agent;
-    Transform target;
-    public ChaseNode(NavMeshAgent agent, Transform target)
+
+    public IsIdleNode(NavMeshAgent agent)
     {
         this.agent = agent;
-        this.target = target;
     }
+
     public override NodeStates Evaluate()
     {
-        agent.SetDestination(target.position);
-        return NodeStates.SUCCESS;
+        bool isIdle = !agent.pathPending && agent.remainingDistance < 1f;
+        return isIdle ? NodeStates.SUCCESS : NodeStates.FAILURE;
     }
 }

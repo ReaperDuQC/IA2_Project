@@ -8,26 +8,26 @@ public class IsAnyEnemyInRangeChasingNode : Node
     Transform player;
     float distanceCrowding;
     float distanceChase;
-    int layerMask;
+    int enemyLayerMask;
 
-    public IsAnyEnemyInRangeChasingNode(Transform enemy, Transform player, float distanceCrowding, float distanceChase, int layerMask)
+    public IsAnyEnemyInRangeChasingNode(Transform enemy, Transform player, float distanceCrowding, float distanceChase, int enemyLayerMask)
     {
         this.enemy = enemy;
         this.player = player;
         this.distanceCrowding = distanceCrowding;
         this.distanceChase = distanceChase;
-        this.layerMask = layerMask;
+        this.enemyLayerMask = enemyLayerMask;
     }
 
     public override NodeStates Evaluate()
     {
         Ray ray = new Ray(enemy.position, Vector3.up);
-        RaycastHit[] hits = Physics.SphereCastAll(ray, distanceCrowding, 0, layerMask);
+        RaycastHit[] hits = Physics.SphereCastAll(ray, distanceCrowding, 0, enemyLayerMask);
 
         bool isCrowdChasing = false;
         foreach (RaycastHit hit in hits)
         {
-            if (hit.collider.GetComponent<EnemyBehaviorTree>() && (player.position - hit.collider.transform.position).sqrMagnitude < distanceChase * distanceChase)
+            if ((player.position - hit.collider.transform.position).sqrMagnitude < distanceChase * distanceChase)
             {
                 Debug.DrawRay(enemy.position, hit.transform.position - enemy.position);
                 isCrowdChasing |= true;

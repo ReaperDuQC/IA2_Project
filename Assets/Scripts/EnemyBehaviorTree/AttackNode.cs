@@ -4,16 +4,13 @@ using UnityEngine;
 
 public class AttackNode : Node
 {
-    //CompleteProject.PlayerHealth health;
-    int damage;
-    public AttackNode(/*CompleteProject.PlayerHealth health,*/ int damage) 
+    public AttackNode() 
     {
-        //this.health = health;
-        this.damage = damage;
+
     }
     public override NodeStates Evaluate()
     {
-        //health.TakeDamage(damage);
+        // TODO: trigger lose condition
         return NodeStates.SUCCESS;
     }
 }

@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IsTargetInRange : Node
+public class IsTargetInRangeNode : Node
 {
     Transform origin;
     Transform target;
     float distance;
-    public IsTargetInRange(Transform origin,Transform target, float distance)
+    public IsTargetInRangeNode(Transform origin, Transform target, float distance)
     {
         this.origin = origin;
         this.target = target;
