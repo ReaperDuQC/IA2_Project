@@ -22,7 +22,7 @@ public class GameController : MonoBehaviour
     [SerializeField] Transform _player;
 
     [SerializeField] GameObject _enemyPrefab;
-    [SerializeField] int _enemySpawnAmount;
+    [SerializeField] [Range(0.0f, 1.0f)] float _enemySpawnPerTileRatio;
     [SerializeField] int _enemyClosestSpawnDistance;
     private List<Vector3> _availableSpawnPosition;
 
@@ -136,7 +136,9 @@ public class GameController : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < _enemySpawnAmount; i++)
+        int enemySpawnAmount = (int)(spawnPositions.Count * _enemySpawnPerTileRatio);
+
+        for (int i = 0; i < enemySpawnAmount; i++)
         {
             int positionsRemaining = spawnPositions.Count - i % spawnPositions.Count;
             int randomIndex = Random.Range(0, positionsRemaining);
