@@ -5,16 +5,20 @@ using UnityEngine.AI;
 public class PatrolNode : Node
 {
     NavMeshAgent agent;
-    Vector3[] patrolPositions;
-    public PatrolNode(NavMeshAgent agent, Vector3[] patrolPositions)
+    Vector3 boundryBottomLeft;
+    float width;
+    float depth;
+    public PatrolNode(NavMeshAgent agent, Collider ground)
     {
         this.agent = agent;
-        this.patrolPositions = patrolPositions;
+        boundryBottomLeft = ground.bounds.min;
+        width = ground.bounds.size.x;
+        depth = ground.bounds.size.z;
     }
     public override NodeStates Evaluate()
     {
-        int randomIndex = Random.Range(0, patrolPositions.Length);
-        agent.SetDestination(patrolPositions[randomIndex]);
+        Vector3 randomDestination = boundryBottomLeft + new Vector3(Random.Range(0, width), 0, Random.Range(0, depth));
+        agent.SetDestination(randomDestination);
         return NodeStates.SUCCESS;
     }
 }

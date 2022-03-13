@@ -16,39 +16,50 @@ public class GameController : MonoBehaviour
     [SerializeField] private Transform _mazeContainer;
     private Prims _maze;
     private List<GameObject> _walls;
+    private List<Vector3> availableSpawnPosition;
     private NavMeshSurface _ground;
     [SerializeField] GameObject _finishLinePrefab;
     [SerializeField] GameObject _startingLinePrefab;
     [SerializeField] Transform _player;
 
-    [SerializeField] GameObject _enemyPrefab;
-    [SerializeField] int _enemySpawnAmount;
-    [SerializeField] int _enemyClosestSpawnDistance;
-    private List<Vector3> _availableSpawnPosition;
-
+    bool _isPathAvailable;
+    NavMeshPath _navMeshPath;
+    [SerializeField] NavMeshAgent _agent;
     private void Awake()
     {
-        PlayerPrefs.SetInt("GameOver", 0);
+        PlayerPrefs.GetInt("Difficulty");
         _startingPosX = 0;
         _startingPosZ = _startingPosZ > _depth - 1 ? (_depth - 1) / 2 : _startingPosZ;
         _exitPosX = _width - 1;
         _exitPosZ = _exitPosZ > _depth - 1 ? (_depth - 1) / 2 : _exitPosZ;
+        int loopCount = 0;
+        do
+        {
+            ClearMaze();
+            _maze = new Prims(_startingPosX, _startingPosZ, _exitPosX, _exitPosZ, _mazeContainer, _width, _depth, _scale);
 
-        ClearMaze();
-        _maze = new Prims(_startingPosX, _startingPosZ, _exitPosX, _exitPosZ, _mazeContainer, _width, _depth, _scale);
+            CreateWall(GetStartingPos() - new Vector3(1f * _scale, -0.5f * _scale,0f));
+            CreateWall(GetEndingPos() + new Vector3(1f * _scale, 0.5f * _scale, 0f));
 
-        CreateWall(GetStartingPos() - new Vector3(1f * _scale, -0.5f * _scale, 0f));
-        CreateWall(GetEndingPos() + new Vector3(1f * _scale, 0.5f * _scale, 0f));
+            _maze.StartGenerating();
+            MakeNavMeshReady();
+            BakeNavMesh();
 
-        _maze.StartGenerating();
-        MakeNavMeshReady();
-        BakeNavMesh();
+            _navMeshPath = new NavMeshPath();
 
+            NavMesh.CalculatePath(GetStartingPos(),GetEndingPos(), NavMesh.AllAreas, _navMeshPath);
+            
+            if(_navMeshPath.status != NavMeshPathStatus.PathComplete)
+            {
+                _isPathAvailable = false;
+            }
+            loopCount++;
+        }
+        while (!_isPathAvailable && loopCount < 2);
         PlaceStartingLine();
         PlaceFinishLine();
-        _availableSpawnPosition = _maze.GetAvailablePositions();
+        availableSpawnPosition = _maze.GetAvailablePositions();
         SetPlayerInitialPosition();
-        SpawnEnemies();
     }
     private void BakeNavMesh()
     {
@@ -77,7 +88,7 @@ public class GameController : MonoBehaviour
 
     public Vector3 GetStartingPos()
     {
-        return new Vector3(_startingPosX * _scale, 0f, _startingPosZ * _scale);
+        return new Vector3( _startingPosX * _scale, 0f, _startingPosZ * _scale);
     }
     public Vector3 GetEndingPos()
     {
@@ -95,22 +106,29 @@ public class GameController : MonoBehaviour
     {
         if (_finishLinePrefab != null)
         {
-            Transform finishLine = Instantiate(_finishLinePrefab, GetEndingPos() + new Vector3(0f, _scale * 0.5f, 0f), Quaternion.identity).transform;
+            Transform finishLine = Instantiate(_finishLinePrefab, GetEndingPos() + new Vector3(0f, _scale * 0.5f, 0f) , Quaternion.identity).transform;
             finishLine.localRotation = Quaternion.Euler(0f, 90f, 0f);
         }
     }
     private void SetPlayerInitialPosition()
     {
-        if (_player != null)
+        if(_player != null)
         {
             _player.position = GetStartingPos() + new Vector3(0f, _scale * 0.5f, 0f);
             _player.rotation = Quaternion.Euler(0, -90f, 0);
         }
     }
+    private void SetAgentInitialPosition()
+    {
+        if (_agent != null)
+        {
+            _agent.transform.position = GetStartingPos() + new Vector3(0f, _scale * 0.5f, 0f);
+        }
+    }
     private void ClearMaze()
     {
         int wallCount = _mazeContainer.childCount;
-        for (int i = wallCount - 1; i >= 0; i--)
+        for (int i = wallCount - 1; i >= 0;i--)
         {
             Destroy(_mazeContainer.GetChild(i).gameObject);
         }
@@ -125,29 +143,4 @@ public class GameController : MonoBehaviour
         wall.transform.position = pos;
     }
 
-    void SpawnEnemies()
-    {
-        List<Vector3> spawnPositions = new List<Vector3>();
-        foreach (var item in _availableSpawnPosition)
-        {
-            if (Vector3.Distance(item, _player.position) > _enemyClosestSpawnDistance)
-            {
-                spawnPositions.Insert(0, item);
-            }
-        }
-
-        for (int i = 0; i < _enemySpawnAmount; i++)
-        {
-            int positionsRemaining = spawnPositions.Count - i % spawnPositions.Count;
-            int randomIndex = Random.Range(0, positionsRemaining);
-            var e = Instantiate(_enemyPrefab, spawnPositions[randomIndex], Quaternion.identity);
-            e.GetComponent<BT_Enemy>().InitializeEnemy(_player, _availableSpawnPosition.ToArray());
-
-            if (positionsRemaining > 1)
-            {
-                spawnPositions.Insert(positionsRemaining, spawnPositions[randomIndex]);
-                spawnPositions.RemoveAt(randomIndex);
-            }
-        }
-    }
 }
