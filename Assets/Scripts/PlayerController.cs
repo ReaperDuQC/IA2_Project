@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 initialPosition;
     [SerializeField] float minimumYPosition = -10f;
 
+    FootStep step;
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -37,6 +39,7 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         initialPosition = transform.position;
+        step = GetComponent<FootStep>();
     }
 
     void Update()
@@ -51,6 +54,7 @@ public class PlayerController : MonoBehaviour
         float movementDirectionY = moveDirection.y;
         moveDirection = (forward * curSpeedX) + (right * curSpeedY);
 
+        Vector3 horizontalMovement = moveDirection;
         if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
         {
             moveDirection.y = jumpSpeed;
@@ -80,6 +84,8 @@ public class PlayerController : MonoBehaviour
             transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
         }
         CheckForFall();
+        step.SetInterval(isRunning);
+        step.IsMoving(canMove && characterController.velocity.magnitude > Mathf.Epsilon);
     }
     void CheckForFall()
     {
