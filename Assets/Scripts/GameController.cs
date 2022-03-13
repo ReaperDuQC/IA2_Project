@@ -20,17 +20,41 @@ public class GameController : MonoBehaviour
     [SerializeField] GameObject _finishLinePrefab;
     [SerializeField] GameObject _startingLinePrefab;
     [SerializeField] Transform _player;
+
+    bool _isPathAvailable;
+    NavMeshPath _navMeshPath;
+    [SerializeField] NavMeshAgent _agent;
     private void Awake()
     {
         PlayerPrefs.GetInt("Difficulty");
         _startingPosX = 0;
         _startingPosZ = _startingPosZ > _depth - 1 ? (_depth - 1) / 2 : _startingPosZ;
-        _exitPosX =  _width - 1 ;
-        _exitPosZ = _exitPosZ > _depth - 1 ?( _depth - 1 ) / 2 : _exitPosZ;
-        _maze = new Prims(_startingPosX, _startingPosZ, _exitPosX, _exitPosZ, _mazeContainer, _width, _depth, _scale);
-        _maze.StartGenerating();
-        MakeNavMeshReady();
-        BakeNavMesh();
+        _exitPosX = _width - 1;
+        _exitPosZ = _exitPosZ > _depth - 1 ? (_depth - 1) / 2 : _exitPosZ;
+        int loopCount = 0;
+        do
+        {
+            ClearMaze();
+            _maze = new Prims(_startingPosX, _startingPosZ, _exitPosX, _exitPosZ, _mazeContainer, _width, _depth, _scale);
+
+            CreateWall(GetStartingPos() - new Vector3(1f * _scale, -0.5f * _scale,0f));
+            CreateWall(GetEndingPos() + new Vector3(1f * _scale, 0.5f * _scale, 0f));
+
+            _maze.StartGenerating();
+            MakeNavMeshReady();
+            BakeNavMesh();
+
+            _navMeshPath = new NavMeshPath();
+
+            NavMesh.CalculatePath(GetStartingPos(),GetEndingPos(), NavMesh.AllAreas, _navMeshPath);
+            
+            if(_navMeshPath.status != NavMeshPathStatus.PathComplete)
+            {
+                _isPathAvailable = false;
+            }
+            loopCount++;
+        }
+        while (!_isPathAvailable && loopCount < 2);
         PlaceStartingLine();
         PlaceFinishLine();
         SetPlayerInitialPosition();
@@ -44,6 +68,7 @@ public class GameController : MonoBehaviour
     }
     private void MakeNavMeshReady()
     {
+
         foreach (Transform child in _mazeContainer)
         {
             child.gameObject.isStatic = true;
@@ -61,12 +86,10 @@ public class GameController : MonoBehaviour
 
     public Vector3 GetStartingPos()
     {
-        Vector3 pos = transform.position;
         return new Vector3( _startingPosX * _scale, 0f, _startingPosZ * _scale);
     }
     public Vector3 GetEndingPos()
     {
-        Vector3 pos = transform.position;
         return new Vector3(_exitPosX * _scale, 0f, _scale * _exitPosZ);
     }
     private void PlaceStartingLine()
@@ -92,4 +115,29 @@ public class GameController : MonoBehaviour
             _player.position = GetStartingPos() + new Vector3(0f, _scale * 0.5f, 0f);
         }
     }
+    private void SetAgentInitialPosition()
+    {
+        if (_agent != null)
+        {
+            _agent.transform.position = GetStartingPos() + new Vector3(0f, _scale * 0.5f, 0f);
+        }
+    }
+    private void ClearMaze()
+    {
+        int wallCount = _mazeContainer.childCount;
+        for (int i = wallCount - 1; i >= 0;i--)
+        {
+            Destroy(_mazeContainer.GetChild(i).gameObject);
+        }
+    }
+    private void CreateWall(Vector3 pos)
+    {
+        GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        wall.name = "Wall";
+        wall.transform.parent = _mazeContainer.transform;
+        Vector3 newScale = _mazeContainer.transform.localScale * _scale;
+        wall.transform.localScale = newScale;
+        wall.transform.position = pos;
+    }
+
 }
