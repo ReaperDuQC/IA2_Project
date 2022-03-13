@@ -1011,6 +1011,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe31748727d80604fa5b6ec4245550d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputField: {fileID: 0}
+  startButton: {fileID: 0}
+  leaderBoardButton: {fileID: 0}
+  quitButton: {fileID: 0}
 --- !u!114 &1498379519
 MonoBehaviour:
   m_ObjectHideFlags: 0

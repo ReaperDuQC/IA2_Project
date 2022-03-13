@@ -25,8 +25,15 @@ public class EndScreen : MonoBehaviour
         }
         else
         {
-            timeText.gameObject.SetActive(!timeText.IsActive()); 
-            timeText.text = "Your Time is : "; // + currentTime.toString(); 
+            gameOverText.text += PlayerPrefs.GetString("Name"); 
+            timeText.gameObject.SetActive(!timeText.IsActive());
+            float currentTime = PlayerPrefs.GetFloat("Time");
+
+            int minutes = Mathf.FloorToInt(currentTime / 60f);
+            int seconde  = Mathf.FloorToInt(currentTime - minutes * 60f);
+
+            timeText.text = "Your Time is : " + string.Format("{0:00} : {1:00}", minutes, seconde);
+            HighScore.SaveScore(PlayerPrefs.GetString("Name"), currentTime);
         }
     }
 
