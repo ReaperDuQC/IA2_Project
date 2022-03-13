@@ -15,7 +15,11 @@ TagManager:
   - Marker
   - PostProcess
   - IgnoreCamera
+<<<<<<< Updated upstream
   - 
+=======
+  - Enemy
+>>>>>>> Stashed changes
   - 
   - 
   - 
