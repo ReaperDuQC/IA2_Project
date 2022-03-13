@@ -14,7 +14,7 @@ public class IsIdleNode : Node
 
     public override NodeStates Evaluate()
     {
-        bool isIdle = !agent.pathPending && agent.remainingDistance < 1f;
+        bool isIdle = !agent.pathPending && agent.remainingDistance < agent.stoppingDistance;
         return isIdle ? NodeStates.SUCCESS : NodeStates.FAILURE;
     }
 }
