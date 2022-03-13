@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EndTrigger : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class EndTrigger : MonoBehaviour
         PlayerController player = other.GetComponent<PlayerController>();
         if(player != null)
         {
-            Debug.Log("Over");
+            SceneManager.LoadScene("End");
         }
     }
 }

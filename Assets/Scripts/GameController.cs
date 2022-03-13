@@ -113,6 +113,7 @@ public class GameController : MonoBehaviour
         if(_player != null)
         {
             _player.position = GetStartingPos() + new Vector3(0f, _scale * 0.5f, 0f);
+            _player.rotation = Quaternion.Euler(0, -90f, 0);
         }
     }
     private void SetAgentInitialPosition()
