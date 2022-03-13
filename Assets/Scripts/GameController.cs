@@ -16,6 +16,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private Transform _mazeContainer;
     private Prims _maze;
     private List<GameObject> _walls;
+    private List<Vector3> availableSpawnPosition;
     private NavMeshSurface _ground;
     [SerializeField] GameObject _finishLinePrefab;
     [SerializeField] GameObject _startingLinePrefab;
@@ -57,6 +58,7 @@ public class GameController : MonoBehaviour
         while (!_isPathAvailable && loopCount < 2);
         PlaceStartingLine();
         PlaceFinishLine();
+        availableSpawnPosition = _maze.GetAvailablePositions();
         SetPlayerInitialPosition();
     }
     private void BakeNavMesh()

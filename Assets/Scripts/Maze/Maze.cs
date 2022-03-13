@@ -22,6 +22,7 @@ public class Maze
     [SerializeField] byte[,] m_map;
     [SerializeField] private int m_scale = 1;
     private List<GameObject> m_walls = new List<GameObject>();
+    private List<Vector3> m_availablePositions = new List<Vector3>();
     public Maze( Transform maze, int width, int depth, int scale)
     {
         m_maze = maze;
@@ -72,9 +73,9 @@ public class Maze
         {
             for (int x = 0; x < m_width; x++)
             {
+                Vector3 pos = new Vector3(x * m_scale, m_scale * 0.5f, z * m_scale);
                 if (m_map[x, z] == 1)
                 {
-                    Vector3 pos = new Vector3(x * m_scale, m_scale / 2, z * m_scale);
                     GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     wall.name = "Wall";
                     wall.transform.parent = m_maze.transform;
@@ -82,6 +83,10 @@ public class Maze
                     wall.transform.localScale = newScale;
                     wall.transform.localPosition = pos;
                     m_walls.Add(wall);
+                }
+                else if(m_map[x, z] == 0)
+                {
+                    m_availablePositions.Add(pos);
                 }
             }
         }
@@ -157,5 +162,9 @@ public class Maze
     public int CountAllNeighbours(int x, int z)
     {
         return CountSquareNeighbours(x, z) + CountDiagonalNeighbours(x, z);
+    }
+    public List<Vector3> GetAvailablePositions()
+    {
+        return m_availablePositions;
     }
 }

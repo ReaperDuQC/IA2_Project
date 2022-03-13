@@ -14,6 +14,8 @@ public class EndScreen : MonoBehaviour
     {
         int x = PlayerPrefs.GetInt("GameOver");
         isGameOver = x == 1 ? true : false;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Confined;
     }
     private void Start()
     {
