@@ -31,7 +31,6 @@ public class PostProcessWobble : MonoBehaviour
 
     void Update()
     {
-
         if (distortion != null)
         {
             float t = (Mathf.Sin(Time.time / cycleDurationDistortion) + 1) * 0.5f;
