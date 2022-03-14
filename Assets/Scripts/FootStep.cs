@@ -78,7 +78,7 @@ public class FootStep : MonoBehaviour
     }
    void MakeRandom(AudioSource source)
     {
-        source.volume = _initialVolume + Random.Range(-0.2f, 0.2f);
-        source.pitch = 1.0f + Random.Range(-0.2f, 0.2f);
+        source.volume = _initialVolume + Random.Range(-0.02f, 0.02f);
+        source.pitch = 1.0f + Random.Range(-0.05f, 0.5f);
     }
 }
