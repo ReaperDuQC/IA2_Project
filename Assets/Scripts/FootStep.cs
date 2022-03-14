@@ -9,24 +9,25 @@ public class FootStep : MonoBehaviour
     [SerializeField] AudioSource _leftSource;
     [SerializeField] float _walkingStepInterval;
     [SerializeField] float _runningStepInterval;
-    float effectiveStepInterval;
-
-    float currentInterval;
+    float _effectiveStepInterval;
+    float _initialVolume;
+    float _currentInterval;
     bool _rightLeg;
     bool _isMoving;
     private void Awake()
     {
-        effectiveStepInterval = _walkingStepInterval;
+        _effectiveStepInterval = _walkingStepInterval;
+        _initialVolume = _rightSource.volume;
     }
     private void Update()
     {
         if (_isMoving)
         {
-            currentInterval += Time.deltaTime;
+            _currentInterval += Time.deltaTime;
 
-            if (currentInterval > effectiveStepInterval)
+            if (_currentInterval > _effectiveStepInterval)
             {
-                currentInterval = 0f;
+                _currentInterval = 0f;
                 PlayStepSound();
             }
         }
@@ -69,7 +70,7 @@ public class FootStep : MonoBehaviour
     }
     public void SetInterval(bool isRunning)
     {
-        effectiveStepInterval = isRunning ? _runningStepInterval : _walkingStepInterval;
+        _effectiveStepInterval = isRunning ? _runningStepInterval : _walkingStepInterval;
     }
     public void IsMoving(bool isMoving)
     {
@@ -77,7 +78,7 @@ public class FootStep : MonoBehaviour
     }
    void MakeRandom(AudioSource source)
     {
-        source.volume = 1.0f + Random.Range(-0.2f, 0.2f);
+        source.volume = _initialVolume + Random.Range(-0.2f, 0.2f);
         source.pitch = 1.0f + Random.Range(-0.2f, 0.2f);
     }
 }
