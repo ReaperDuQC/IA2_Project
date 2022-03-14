@@ -10,8 +10,6 @@ public class BT_Enemy : MonoBehaviour
     [SerializeField] float m_maxStoppingDistance;
     [SerializeField] LayerMask m_enemyLayerMask;
 
-    public bool IsChasing { get; set; }
-
     Selector m_rootNode;
     Sequence m_attackNode;
     Sequence m_chaseNode;
@@ -41,7 +39,7 @@ public class BT_Enemy : MonoBehaviour
         List<Node> chaseSeletorChildren = new List<Node>();
         chaseSeletorChildren.Add(isPlayerInChaseRange);
         chaseSeletorChildren.Add(isCrowding);
-        Selector chaseSelector = new ChaseSelector(chaseSeletorChildren, agent, this, m_maxStoppingDistance);
+        Selector chaseSelector = new ChaseSelector(chaseSeletorChildren, agent, m_maxStoppingDistance);
         ChaseNode chaseNode = new ChaseNode(agent, player);
         chaseChildren.Add(chaseSelector);
         chaseChildren.Add(chaseNode);

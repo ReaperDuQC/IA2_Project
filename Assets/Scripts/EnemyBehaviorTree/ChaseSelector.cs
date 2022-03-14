@@ -6,12 +6,10 @@ using UnityEngine.AI;
 public class ChaseSelector : Selector
 {
     NavMeshAgent agent;
-    BT_Enemy enemyBT;
     float maxStoppingDistance;
-    public ChaseSelector(List<Node> nodes, NavMeshAgent agent, BT_Enemy enemyBT, float maxStoppingDistance) : base(nodes)
+    public ChaseSelector(List<Node> nodes, NavMeshAgent agent, float maxStoppingDistance) : base(nodes)
     {
         this.agent = agent;
-        this.enemyBT = enemyBT;
         this.maxStoppingDistance = maxStoppingDistance;
     }
 
@@ -22,7 +20,6 @@ public class ChaseSelector : Selector
         {
             bool isSuccessful = resultState == NodeStates.SUCCESS;
             agent.stoppingDistance = isSuccessful ? 1.0f : maxStoppingDistance;
-            enemyBT.IsChasing = isSuccessful;
         }
         return resultState;
     }
