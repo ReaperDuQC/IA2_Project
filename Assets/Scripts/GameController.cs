@@ -28,6 +28,8 @@ public class GameController : MonoBehaviour
 
     private void Awake()
     {
+        _width = PlayerPrefs.GetInt("Width");
+        _depth = PlayerPrefs.GetInt("Depth");
         PlayerPrefs.SetInt("GameOver", 0);
         _startingPosX = 0;
         _startingPosZ = _startingPosZ > _depth - 1 ? (_depth - 1) / 2 : _startingPosZ;

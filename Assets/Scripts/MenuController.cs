@@ -11,14 +11,23 @@ public class MenuController : MonoBehaviour
     [SerializeField] Button startButton;
     [SerializeField] Button leaderBoardButton;
     [SerializeField] Button quitButton;
-
-
-
-
-
+    [SerializeField] Slider depthSlider;
+    [SerializeField] Slider widthSlider;
+    [SerializeField] TextMeshProUGUI depthText;
+    [SerializeField] TextMeshProUGUI widthText;
+    string depthBaseText = "Depth : ";
+    string widthBaseText = "Width : ";
+    int depthValue = 0;
+    int widthValue = 0;
+    private void Awake()
+    {
+        UpdateTexts();
+    }
 
     public void LoadNextScene()
     {
+        PlayerPrefs.SetInt("Width", widthValue);
+        PlayerPrefs.SetInt("Depth", depthValue);
         SceneManager.LoadScene((SceneManager.GetActiveScene().buildIndex + 1) % SceneManager.sceneCountInBuildSettings);
     }
     public void QuitGame()
@@ -50,5 +59,35 @@ public class MenuController : MonoBehaviour
     public void LoadMainMenu()
     {
         SceneManager.LoadScene(0);
+    }
+
+    public void UpdateWidthValue()
+    {
+        UpdateWidthText();
+    }
+    public void UpdateDepthValue()
+    {
+        UpdateDepthText();
+    }
+    private void UpdateWidthText()
+    {
+        if (widthText != null && widthSlider != null)
+        {
+            widthValue = (int)widthSlider.value;
+            widthText.text = widthBaseText + widthValue.ToString();
+        }
+    }
+    private void UpdateDepthText()
+    {
+        if (depthText != null && depthSlider != null)
+        {
+            depthValue = (int)depthSlider.value;
+            depthText.text = depthBaseText + depthValue.ToString();
+        }
+    }
+    void UpdateTexts()
+    {
+        UpdateWidthText();
+        UpdateDepthText();
     }
 }
