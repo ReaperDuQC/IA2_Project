@@ -32,12 +32,12 @@ public class Maze
     }
     public void StartGenerating()
     {
-        InitialiseMap();
-        Generate();
-        DrawMap();
+        InitialiseMap(); // met tout les valeur a 1 
+        Generate(); // on envoie le crawwler faire les tests
+        DrawMap(); // dessine la map. 
     }
 
-    public virtual void Generate()
+    public virtual void Generate() // Genere une grille de de grandeur X Y 
     {
         for (int z = 0; z < m_depth; z++)
         {
@@ -50,7 +50,7 @@ public class Maze
             }
         }
     }
-    private void InitialiseMap()
+    private void InitialiseMap() //initialise la grille a 1
     {
         m_map = new byte[m_width, m_depth];
 
@@ -107,13 +107,13 @@ public class Maze
     {
         m_map[x, z] = value;
     }
-    public int CountSquareNeighbours(int x, int z)
+    public int CountSquareNeighbours(int x, int z)  // compte le nombre de case voisin libre
     {
         int count = 0;
         if( x <= 0 || x >= m_width - 1 || z <= 0 || z >= m_depth - 1)
         {
             count = 5;
-            return count;
+            return count; 
         }
         if(m_map[x - 1, z] == 0)
         {
